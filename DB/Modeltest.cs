@@ -10,10 +10,12 @@
         // Use this for initialization
         void Start()
         {
-            var model = Model.All<Song>();
-            var source = this.GetComponent<AudioSource>();
-            source.clip = model.First<KeyValuePair<object, Song>>().Value.File;
-            source.Play();
+            var models = Model.All<UnityKeyValue>();
+            
+            foreach(var model in models)
+            {
+                UE.Debug.Log(model);
+            }
         }
     }
 }

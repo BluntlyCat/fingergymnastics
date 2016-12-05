@@ -3,40 +3,40 @@
     using System;
     using System.Collections.Generic;
 
-    public class Settings : Model
+    public class UnitySettingGroup : Model
     {
-        private string group;
-        private Dictionary<string, SettingsKeyValue> keyValue;
+        private string name;
+        private Dictionary<string, UnityKeyValue> keyValue;
 
-        public Settings(string group)
+        public UnitySettingGroup(string name)
         {
-            this.group = group;
+            this.name = name;
         }
 
         [PrimaryKey]
-        public string Group
+        public string Name
         {
             get
             {
-                return this.group;
+                return this.name;
             }
 
             private set
             {
-                this.group = value;
+                this.name = value;
             }
         }
 
         [ManyToManyRelation(
-            "group",
-            "settings",
-            "settings_id",
-            "settings_setting",
-            "settingskeyvalue_id",
-            "settingskeyvalue",
+            "name",
+            "unitysettinggroup",
+            "unitysettinggroup_id",
+            "unitysettinggroup_settings",
+            "unitykeyvalue_id",
+            "unitykeyvalue",
             "key"
         )]
-        public Dictionary<string, SettingsKeyValue> KeyValue
+        public Dictionary<string, UnityKeyValue> KeyValue
         {
             get
             {

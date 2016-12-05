@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public class SettingsKeyValue : Model
+    public class UnityKeyValue : Model
     {
         private string key;
         private object value;
@@ -23,7 +23,7 @@
 
         private Dictionary<Type, MethodInfo> methodMapping;
 
-        public SettingsKeyValue(string key)
+        public UnityKeyValue(string key)
         {
             this.key = key;
             BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
@@ -78,7 +78,7 @@
             }
         }
 
-        [TableColumn("dataType")]
+        [TableColumn("data_type")]
         private string StringType
         {
             get
@@ -115,7 +115,8 @@
 
         public T GetValue<T>()
         {
-            return (T)this.ConvertValue().Invoke(this, new object[] { this.value });
+            var value = this.ConvertValue().Invoke(this, new object[] { this.value });
+            return (T)value;
         }
 
         public void SetValue<T>(T value)

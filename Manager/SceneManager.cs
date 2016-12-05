@@ -10,26 +10,15 @@
     {
         private static Logger<SceneManager> logger = new Logger<SceneManager>();
 
-        private static GameObject menuItems;
-        private static List<string> previousScenes = new List<string>();
         private static string sceneName;
-
-        private int sceneCount;
-        private USM.Scene[] scenes;
 
         // Use this for initialization
         void Awake()
         {
             logger.AddLogAppender<ConsoleAppender>();
-
-            sceneCount = USM.SceneManager.sceneCount;
-            scenes = new USM.Scene[sceneCount];
             sceneName = USM.SceneManager.GetActiveScene().name;
 
-            for (int i = 0; i < sceneCount; i++)
-            {
-                scenes[i] = USM.SceneManager.GetSceneAt(i);
-            }
+            logger.Debug(string.Format("Load scene: {0}", sceneName));
         }
 
         public static string SceneName
@@ -40,11 +29,8 @@
             }
         }
 
-        private void LoadNewScene(string scene, bool addPrevious = true)
+        private void LoadNewScene(string scene)
         {
-            if (addPrevious)
-                previousScenes.Add(USM.SceneManager.GetActiveScene().name);
-
             USM.SceneManager.LoadScene(scene);
         }
 
@@ -52,56 +38,24 @@
         {
         }
 
-        public void ReloadSettingsMenu()
+        public void ReloadScene()
         {
-            this.LoadNewScene("Settings", false);
+            this.LoadNewScene(sceneName);
         }
 
-        public void LoadNewPatientMenu(bool setActivePatientNull = false)
-        {
-            this.LoadNewScene("NewPatientMenu");
-        }
-        public void LoadStatisticMenu()
-        {
-            this.LoadNewScene("Statistic");
-        }
-
-        public void ReturnToWindows()
+        public void Quit()
         {
             Application.Quit();
         }
 
-        public void GoOneSceneBack()
+        public void LoadScene(string sceneName)
         {
-            var last = previousScenes.Last();
-            previousScenes.Remove(last);
-
-            this.LoadNewScene(last, false);
-        }
-
-        public void LoadExerciseSelectionMenu()
-        {
-            this.LoadNewScene("ExerciseSelectionMenu");
-        }
-
-        public void LoadTitleMenu()
-        {
-                this.LoadNewScene("TitleMenu");
-        }
-
-        public void LoadPatientSlectionMenu()
-        {
-            this.LoadNewScene("PatientSelectionMenu");
+            this.LoadNewScene(sceneName);
         }
 
         public void LoadScene(GameObject gameObject)
         {
-            this.LoadNewScene(gameObject.name, true);
-        }
-
-        public void PreviousScene()
-        {
-            GoOneSceneBack();
+            this.LoadNewScene(gameObject.name);
         }
     }
 }
