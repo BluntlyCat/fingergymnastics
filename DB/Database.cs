@@ -29,10 +29,11 @@
             //logger.AddLogAppender<FileAppender>();
 #endif
 
-            var dbFile = "Data Source=" + Application.dataPath + "/StreamingAssets/db/fgeditor.db";
+            var dbFile = "fgeditor.db";
+            var dbPath = string.Format("Data Source={0}/StreamingAssets/db/{1}", Application.dataPath, dbFile);
 
             this.tablePrefix = tablePrefix;
-            dbConnection = new SqliteConnection(dbFile);
+            dbConnection = new SqliteConnection(dbPath);
         }
 
         ~Database()

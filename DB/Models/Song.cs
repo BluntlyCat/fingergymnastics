@@ -5,10 +5,25 @@ namespace HSA.FingerGymnastics.DB.Models
 {
     public class Song : UnityModel
     {
+        private string title;
         private AudioClip file;
         private Dictionary<long, Track> tracks;
 
         public Song(string unityObjectName) : base(unityObjectName) {}
+
+        [TableColumn]
+        public string Title
+        {
+            get
+            {
+                return title;
+            }
+
+            set
+            {
+                this.title = value;
+            }
+        }
 
         [TableColumn]
         [Resource]

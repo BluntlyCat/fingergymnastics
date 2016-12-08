@@ -36,6 +36,7 @@
 
         public void LoadExercise()
         {
+            this.LoadNewScene("Exercise");
         }
 
         public void ReloadScene()

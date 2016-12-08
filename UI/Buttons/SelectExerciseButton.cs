@@ -1,15 +1,25 @@
 ﻿namespace HSA.FingerGymnastics.UI.Buttons
 {
     using Manager;
-    using UnityEngine.UI;
+    using UnityEngine;
 
-    public class SelectExerciseButton : TranslatedUI
+    public class SelectExerciseButton : MonoBehaviour
     {
-        // Use this for initialization
+        public GameObject gameManagerPrefab;
+
+        private GameManager gameManager;
+        private SceneManager sceneManager;
+
         void Start()
         {
-            var languageManager = gameManager.GetComponent<LanguageSettingManager>();
-            this.GetComponentInChildren<Text>().text = languageManager.GetTranslation("selectExercise");
+            this.gameManager = gameManagerPrefab.GetComponent<GameManager>();
+            this.sceneManager = gameManagerPrefab.GetComponent<SceneManager>();
+        }
+
+        public void LoadExercise()
+        {
+            GameManager.SelectedExercise = this.name;
+            sceneManager.LoadExercise();
         }
     }
 }
