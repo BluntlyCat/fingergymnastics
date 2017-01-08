@@ -1,9 +1,8 @@
 ﻿namespace HSA.FingerGymnastics.DB.Models
 {
+    using Exercises;
+    using Mhaze.Unity.DB.Models;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     public class Gesture : Model
     {
@@ -12,6 +11,7 @@
         private DateTime startTime;
         private DateTime endTime;
         private DateTime duration;
+        private long gestureType;
 
         public Gesture(long id)
         {
@@ -31,7 +31,7 @@
                 this.id = value;
             }
         }
-
+        
         [TableColumn("start_time")]
         public DateTime StartTime
         {
@@ -72,6 +72,38 @@
             {
                 this.duration = value;
             }
+        }
+
+        [TableColumn("kind")]
+        private long LongGestureType
+        {
+            get
+            {
+                return this.gestureType;
+            }
+
+            set
+            {
+                this.gestureType = value;
+            }
+        }
+
+        public Gestures GestureType
+        {
+            get
+            {
+                return (Gestures)this.gestureType;
+            }
+
+            set
+            {
+                this.gestureType = (long)value;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}s, {2}s - {3}s", id, duration.TimeOfDay.TotalSeconds, startTime.TimeOfDay.TotalSeconds, endTime.TimeOfDay.TotalSeconds);
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿namespace HSA.FingerGymnastics.Manager
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Logging;
+    using Mhaze.Unity.Logging;
     using UnityEngine;
     using USM = UnityEngine.SceneManagement;
 

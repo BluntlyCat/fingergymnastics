@@ -1,5 +1,6 @@
 ﻿namespace HSA.FingerGymnastics.UI.Buttons
 {
+    using Game;
     using Manager;
     using UnityEngine;
 
@@ -7,18 +8,18 @@
     {
         public GameObject gameManagerPrefab;
 
-        private GameManager gameManager;
+        private GameState gameState;
         private SceneManager sceneManager;
 
         void Start()
         {
-            this.gameManager = gameManagerPrefab.GetComponent<GameManager>();
+            this.gameState = gameManagerPrefab.GetComponent<GameState>();
             this.sceneManager = gameManagerPrefab.GetComponent<SceneManager>();
         }
 
         public void LoadExercise()
         {
-            GameManager.SelectedExercise = this.name;
+            GameState.SelectedExercise = this.name;
             sceneManager.LoadExercise();
         }
     }

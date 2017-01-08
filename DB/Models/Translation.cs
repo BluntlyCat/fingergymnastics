@@ -1,5 +1,7 @@
 ﻿namespace HSA.FingerGymnastics.DB.Models
 {
+    using Mhaze.Unity.DB.Models;
+
     public class Translation : UnityModel
     {
         private string text;

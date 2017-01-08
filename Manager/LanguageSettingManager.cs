@@ -1,6 +1,7 @@
 ﻿namespace HSA.FingerGymnastics.Manager
 {
     using DB.Models;
+    using Mhaze.Unity.DB.Models;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -23,7 +24,7 @@
             activeLanguange = settingsManager.GetKeyValue("fgeditor", "language");
             sceneManager = this.GetComponent<SceneManager>();
             languages = languageKeyValue.GetValue<IList>();
-            translations = Model.All<Translation>();
+            translations = Model.All<Translation>(activeLanguange.GetValue<string>());
         }
 
         public string ActiveLanguage

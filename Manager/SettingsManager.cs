@@ -1,6 +1,6 @@
 ﻿namespace HSA.FingerGymnastics.Manager
 {
-    using DB.Models;
+    using Mhaze.Unity.DB.Models;
     using System;
     using System.Collections.Generic;
     using UnityEngine;

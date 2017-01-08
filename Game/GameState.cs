@@ -1,21 +1,23 @@
-﻿namespace HSA.FingerGymnastics.Manager
+﻿namespace HSA.FingerGymnastics.Game
 {
     using DB.Models;
+    using Manager;
+    using Mhaze.Unity.DB.Models;
     using System.Linq;
     using UnityEngine;
 
     [RequireComponent(typeof(SettingsManager))]
     [RequireComponent(typeof(SceneManager))]
-    public class GameManager : MonoBehaviour
+    public class GameState : MonoBehaviour
     {
         private static string selectedExercise;
         private static bool exerciseIsActive;
-        private static bool hasKinectUser;
 
-        void Start()
-        {
-        }
-
+#if UNITY_EDITOR
+        private static bool debug = true;
+#else
+        private static bool debug = false;
+#endif
         public static string SelectedExercise
         {
             get
@@ -45,16 +47,11 @@
             }
         }
 
-        public static bool HasKinectUser
+        public static bool Debug
         {
             get
             {
-                return hasKinectUser;
-            }
-
-            set
-            {
-                hasKinectUser = value;
+                return debug;
             }
         }
     }

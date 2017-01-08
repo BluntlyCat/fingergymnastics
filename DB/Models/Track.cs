@@ -1,13 +1,12 @@
 ﻿namespace HSA.FingerGymnastics.DB.Models
 {
-    using System;
+    using Mhaze.Unity.DB.Models;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     public class Track : Model
     {
         private long id;
+
         private Dictionary<long, Gesture> gestures;
 
         public Track(long id)

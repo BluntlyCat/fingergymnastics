@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace HSA.FingerGymnastics.DB.Models
+﻿namespace HSA.FingerGymnastics.DB.Models
 {
+    using Mhaze.Unity.DB.Models;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     public class Song : UnityModel
     {
         private string title;
