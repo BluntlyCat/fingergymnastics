@@ -2,6 +2,7 @@
 {
     using Exercises;
     using Game;
+    using Manager;
     using Mhaze.Unity.DB.Models;
     using System.Linq;
     using UnityEngine;
@@ -18,9 +19,8 @@
         public double timeOffset = 1d;
 
         private AudioSource music;
-        private AudioSource hitSound;
-        private AudioSource expiredSound;
 
+        private SceneManager sceneManager;
         private GameState gameState;
         private LeapHandController controller;
         private ViewManager viewManager;
@@ -44,9 +44,11 @@
             controller = handControllerPrefab.GetComponent<LeapHandController>();
             viewManager = viewManagerPrefab.GetComponent<ViewManager>();
             music = musicPrefab.GetComponent<AudioSource>();
+            sceneManager = GetComponentInParent<SceneManager>();
 
             song = Model.GetModel<DB.Song>(GameState.SelectedExercise);
-            gestureController = new GestureController(viewManager, song.Tracks.First().Value.Gestures.Count);
+            GameState.MaxScore = song.Tracks.First().Value.Gestures.Count;
+            gestureController = new GestureController(viewManager);
             
             music.clip = song.File;
             viewManager.SetScoreText(0, song.Tracks.First().Value.Gestures.Count);
@@ -56,7 +58,7 @@
 
         private void Update()
         {
-            if (hasGestures)
+            if (gestureController.RemovedGestureCount != gestureController.GestureCount)
             {
                 if (controller.IsConnected && (controller.HasOneHand || GameState.Debug))
                 {
@@ -75,6 +77,10 @@
                     PauseExercise();
                 }
             }
+            else
+            {
+                StopErercise(true);
+            }
         }
 
         public void StartExercise()
@@ -87,9 +93,12 @@
             music.Pause();
         }
 
-        public void StopErercise()
+        public void StopErercise(bool finished)
         {
             music.Stop();
+
+            if (finished)
+                sceneManager.LoadScene("Finished");
         }
 
         public float CurrentTime

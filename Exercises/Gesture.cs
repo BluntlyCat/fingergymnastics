@@ -1,13 +1,13 @@
 ﻿namespace HSA.FingerGymnastics.Exercises
 {
     using Leap;
-    using DB = DB.Models;
+    using Mhaze.Unity.Logging;
     using View;
+    using DB = DB.Models;
 
     public abstract class Gesture
     {
-        protected Gesture next;
-        protected Gesture previous;
+        protected static Logger<Gesture> logger = new Logger<Gesture>();
 
         protected DB.Gesture gestureModel;
 
@@ -18,40 +18,15 @@
 
         private double timeOffset;
         
-        public Gesture(Gesture previous, DB.Gesture gesture, GestureController gestureController, double timeOffset)
+        public Gesture(DB.Gesture gesture, GestureController gestureController, double timeOffset)
         {
-            this.previous = previous;
+            logger.AddLogAppender<ConsoleAppender>();
+
             this.gestureModel = gesture;
             this.gestureController = gestureController;
             this.timeOffset = timeOffset;
         }
-
-        public Gesture Next
-        {
-            get
-            {
-                return next;
-            }
-
-            set
-            {
-                next = value;
-            }
-        }
-
-        public Gesture Previous
-        {
-            get
-            {
-                return previous;
-            }
-
-            set
-            {
-                previous = value;
-            }
-        }
-
+        
         public DB.Gesture GestureModel
         {
             get
@@ -86,9 +61,6 @@
                     if (time > gestureModel.EndTime.TimeOfDay.TotalSeconds)
                         this.state = GestureStates.Expired;
                     break;
-
-                case GestureStates.Removed:
-                    break;
             }
         }
 
@@ -97,20 +69,15 @@
             this.state = GestureStates.PreReady;
             this.marker = marker;
         }
-
-        public void SetPreReady()
-        {
-            this.state = GestureStates.PreReady;
-        }
-
+        
         public void SetReady()
         {
             this.Marker.SetMarkerReady();
         }
-
-        public void SetRemoved()
+        
+        public void SetState(GestureStates state)
         {
-            this.state = GestureStates.Removed;
+            this.state = state;
         }
         
         public GestureStates State
@@ -120,5 +87,7 @@
                 return this.state;
             }
         }
+
+        protected abstract bool IsGesture(Hand hand);
     }
 }

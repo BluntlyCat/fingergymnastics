@@ -1,30 +1,37 @@
 ﻿namespace HSA.FingerGymnastics.Exercises
 {
-    using System;
     using Leap;
-    using DB = DB.Models;
     using View;
+    using DB = DB.Models;
 
     public class ExtendedHand : Gesture
     {
-        public ExtendedHand(Gesture previous, DB.Gesture gesture, GestureController gestureController, double timeOffset) : base (previous, gesture, gestureController, timeOffset)
+        public ExtendedHand(DB.Gesture gesture, GestureController gestureController, double timeOffset) : base (gesture, gestureController, timeOffset)
         {
             
         }
 
+        protected override bool IsGesture(Hand hand)
+        {
+            return hand.GrabStrength < 0.1;
+        }
+
         private void Marker_OnMarkerCollision(Marker marker, Hand hand)
         {
-            if (hand.GrabStrength == 0)
+            if (IsGesture(hand) && this.state == GestureStates.Ready)
             {
-                this.state = GestureStates.Expired;
+                this.state = GestureStates.Hit;
+                marker.Collider.CanCollide = false;
                 gestureController.ExpireMarker(this);
             }
+            else
+                marker.Collider.CanCollide = true;
         }
 
         public override void AddMarker(Marker marker)
         {
             base.AddMarker(marker);
-            marker.OnMarkerCollision += Marker_OnMarkerCollision;
+            marker.Collider.OnMarkerCollision += Marker_OnMarkerCollision;
         }
     }
 }

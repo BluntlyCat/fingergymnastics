@@ -7,6 +7,8 @@
         Add = 2,
         Ready = 3,
         Expired = 4,
-        Removed = 5,
+        Hit = 5,
+        NotHit = 6,
+        Removed = 7,
     }
 }

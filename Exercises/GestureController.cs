@@ -1,26 +1,25 @@
 ﻿namespace HSA.FingerGymnastics.Exercises
 {
-    using Leap;
+    using Controller;
+    using Game;
     using System;
-    using UnityEngine;
+    using System.Collections.Generic;
     using View;
     using DB = DB.Models;
 
     public class GestureController
     {
-        private Gesture head;
-        private Gesture current;
-        private Gesture tail;
+        private IList<Gesture> gestures;
+        private IList<Gesture> removedGestures;
 
         private ViewManager viewManager;
 
-        private int maxScore = 0;
-        private int score = 0;
-
-        public GestureController(ViewManager viewManager, int maxScore)
+        public GestureController(ViewManager viewManager)
         {
+            this.gestures = new List<Gesture>();
+            this.removedGestures = new List<Gesture>();
+
             this.viewManager = viewManager;
-            this.maxScore = maxScore;
         }
 
         public void AddGesture(DB.Gesture gesture, double timeOffset)
@@ -30,72 +29,53 @@
             switch (gesture.GestureType)
             {
                 case Gestures.ExtendedHand:
-                    newGesture = new ExtendedHand(tail, gesture, this, timeOffset);
+                    newGesture = new ExtendedHand(gesture, this, timeOffset);
                     break;
 
                 case Gestures.Fist:
-                    newGesture = new Fist(tail, gesture, this, timeOffset);
+                    newGesture = new Fist(gesture, this, timeOffset);
                     break;
             }
 
-            if (head == null)
-                head = current = newGesture;
-
-            if (tail != null)
-                tail.Next = newGesture;
-
-            tail = newGesture;
-        }
-
-        public void RemoveGesture(Gesture gesture)
-        {
-            gesture.Previous.Next = gesture.Next;
-            gesture.Next.Previous = gesture.Previous;
-
-            gesture = null;
+            gestures.Add(newGesture);
         }
 
         public void ExpireMarker(Gesture gesture)
         {
-            PlaySound(gesture.Marker);
-            viewManager.SetScoreText(++score, maxScore);
-
-            if (gesture.Marker.isActiveAndEnabled)
-                viewManager.DisableMarker(gesture.Marker);
+            GameState.Score = gesture.Marker.DisableMarker(GameState.Score, GameState.MaxScore, gesture.State);
+            removedGestures.Add(gesture);
         }
 
         public void Proof(float time)
         {
             try
             {
-                for (Gesture current = head; current != null; current = current.Next)
+                foreach (Gesture gesture in gestures)
                 {
-                    switch (current.State)
+                    switch (gesture.State)
                     {
                         case GestureStates.NotAdded:
-                            current.Proof(time);
+                            gesture.Proof(time);
                             break;
 
                         case GestureStates.Add:
-                            current.AddMarker(viewManager.AddMarker(current));
-                            current.SetPreReady();
+                            Marker marker = viewManager.AddMarker(gesture);
+                            gesture.AddMarker(marker);
+                            gesture.SetState(GestureStates.PreReady);
                             break;
 
                         case GestureStates.PreReady:
-                            current.Proof(time);
+                            gesture.Proof(time);
                             break;
 
                         case GestureStates.Ready:
-                            current.SetReady();
-                            current.Proof(time);
+                            gesture.SetReady();
+                            gesture.Proof(time);
                             break;
 
                         case GestureStates.Expired:
-                            if (current.Marker.NotHit)
-                                PlaySound(current.Marker);
-
-                            viewManager.DisableMarker(current.Marker);
-                            current.SetRemoved();
+                            gesture.SetState(GestureStates.NotHit);
+                            ExpireMarker(gesture);
                             break;
                     }
                 }
@@ -106,39 +86,19 @@
             }
         }
 
-        public bool SetNext()
-        {
-            current = current.Next;
-
-            return current != null;
-        }
-
-        public void PlaySound(Marker marker)
-        {
-            marker.PlaySound();
-        }
-
-        public Gesture First
+        public int GestureCount
         {
             get
             {
-                return head;
+                return gestures.Count;
             }
         }
 
-        public Gesture Last
+        public int RemovedGestureCount
         {
             get
             {
-                return tail;
-            }
-        }
-
-        public Gesture Current
-        {
-            get
-            {
-                return current;
+                return removedGestures.Count;
             }
         }
     }

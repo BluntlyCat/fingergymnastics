@@ -37,13 +37,7 @@
             SetPalmMaterial(hand, material);
             SetFingerMaterial(hand, material);
         }
-
-        public void ScaleHand(SkeletalHand hand)
-        {
-            ScalePalm(hand);
-            ScaleFingers(hand);
-        }
-
+        
         private int UpdateHand(IDictionary<string, SkeletalHand> hands, string name, int id)
         {
             int newId = id;
@@ -56,19 +50,11 @@
                 if (id == -1 || id != newId)
                 {
                     SetHandMaterial(handModel, defaultMaterial);
-                    //ScaleHand(handModel);
                 }
 
-                //handModel.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             }
 
             return newId;
-        }
-
-        private void ScalePalm(SkeletalHand hand)
-        {
-            if (hand.palm != null)
-                hand.palm.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
         }
 
         private void SetPalmMaterial(SkeletalHand hand, Material material)
@@ -113,18 +99,7 @@
                 }
             }
         }
-
-        private void ScaleFingers(SkeletalHand hand)
-        {
-            foreach (var finger in hand.fingers)
-            {
-                if (finger != null)
-                {
-                    finger.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-                }
-            }
-        }
-
+        
         private IDictionary<string, SkeletalHand> FindHands()
         {
             IDictionary<string, SkeletalHand> hands = new Dictionary<string, SkeletalHand>();

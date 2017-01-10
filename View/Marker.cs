@@ -4,87 +4,60 @@
     using Leap;
     using Mhaze.Unity.Logging;
     using UnityEngine;
-
-    public delegate void CollisionEventHandler(Marker marker, Hand hand);
-
+    
     public class Marker : MonoBehaviour
     {
         protected static Logger<Marker> logger = new Logger<Marker>();
-
-        public event CollisionEventHandler OnMarkerCollision;
-
-        public Color leftDirection;
-        public Color rightDirection;
+        
+        public Color leftDirectionColor;
+        public Color rightDirectionColor;
 
         public Sprite fist;
         public Sprite extendedHand;
+
+        public GameObject scoreSpritePrefab;
+        public GameObject handSpritePrefab;
+
+        private ViewManager viewManager;
 
         private AudioSource sound;
         private AudioClip hitSound;
         private AudioClip expiredSound;
 
-        private SpriteRenderer spriteRenderer;
+        private Animator scoreAnimator;
 
-        private bool removed = false;
-        private bool notHit = true;
+        private SpriteRenderer scoreSpriteRenderer;
+        private SpriteRenderer handSpriteRenderer;
 
-        private double startTime = 0;
-        private double endTime = 0;
+        private SpriteCollider spriteCollider;
 
         private bool isLeft;
+        private bool isActive = true;
 
         void Awake()
         {
             logger.AddLogAppender<ConsoleAppender>();
 
-            sound = this.GetComponentInParent<AudioSource>();
+            sound = this.GetComponent<AudioSource>();
             hitSound = Resources.Load<AudioClip>("Sounds/hit");
             expiredSound = Resources.Load<AudioClip>("Sounds/missed");
-            spriteRenderer = this.GetComponent<SpriteRenderer>();
+            scoreSpriteRenderer = scoreSpritePrefab.GetComponent<SpriteRenderer>();
+            handSpriteRenderer = handSpritePrefab.GetComponent<SpriteRenderer>();
+            scoreAnimator = scoreSpritePrefab.GetComponent<Animator>();
+            spriteCollider = GetComponentInChildren<SpriteCollider>();
         }
-
-        void OnCollisionEnter(Collision collision)
-        {
-            var parent = GetParent(collision.collider.transform);
-
-            if (parent == null)
-                return;
-
-            Hand hand = parent.GetComponent<RigidHand>().GetLeapHand();
-
-            if (hand.IsLeft == isLeft && notHit)
-            {
-                notHit = false;
-
-                if (OnMarkerCollision != null)
-                    OnMarkerCollision(this, parent.GetComponent<RigidHand>().GetLeapHand());
-            }
-        }
-
-        private Transform GetParent(Transform gameObject)
-        {
-            if (gameObject.name != "RigidHand(Clone)" && gameObject.transform.parent != null)
-                return GetParent(gameObject.transform.parent);
-
-            else if (gameObject.name == "RigidHand(Clone)")
-                return gameObject;
-
-            return null;
-        }
-
-        private void SetColor()
+        
+        private void SetColor(SpriteRenderer renderer)
         {
             if (isLeft)
-                spriteRenderer.color = this.leftDirection;
+                renderer.color = this.leftDirectionColor;
             else
-                spriteRenderer.color = this.rightDirection;
-
-            SetAlpha(.5f);
+                renderer.color = this.rightDirectionColor;
         }
 
-        private void SetAlpha(float alpha)
+        private void SetAlpha(SpriteRenderer renderer, float alpha)
         {
-            spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, alpha);
+            renderer.color = new Color(handSpriteRenderer.color.r, handSpriteRenderer.color.g, handSpriteRenderer.color.b, alpha);
         }
 
         public void SetGestureSprite(Gestures gesture)
@@ -92,11 +65,11 @@
             switch (gesture)
             {
                 case Gestures.ExtendedHand:
-                    spriteRenderer.sprite = extendedHand;
+                    handSpriteRenderer.sprite = extendedHand;
                     break;
 
                 case Gestures.Fist:
-                    spriteRenderer.sprite = fist;
+                    handSpriteRenderer.sprite = fist;
                     break;
             }
         }
@@ -104,75 +77,61 @@
         public void SetOrientation(bool left)
         {
             this.isLeft = left;
-            this.spriteRenderer.flipX = left;
+            this.handSpriteRenderer.flipX = left;
         }
 
         public void SetMarkerPreReady()
         {
-            SetColor();
-            SetAlpha(.5f);
+            SetColor(handSpriteRenderer);
+            SetColor(scoreSpriteRenderer);
+            SetAlpha(handSpriteRenderer, .5f);
         }
 
         public void SetMarkerReady()
         {
-            SetAlpha(1f);
-            GetComponent<MeshCollider>().enabled = true;
+            SetAlpha(handSpriteRenderer, 1f);
+            handSpritePrefab.GetComponent<BoxCollider>().enabled = true;
         }
         
-        public void PlaySound()
+        public int DisableMarker(int score, int maxScore, GestureStates state)
         {
-            if (notHit)
-                sound.clip = expiredSound;
-            else
-                sound.clip = hitSound;
+            if (isActive)
+            {
+                isActive = false;
+                this.handSpritePrefab.SetActive(false);
 
-            sound.Play();
+                switch(state)
+                {
+                    case GestureStates.NotHit:
+                        sound.clip = expiredSound;
+                        this.scoreSpritePrefab.SetActive(false);
+                        break;
+
+                    case GestureStates.Hit:
+                        score++;
+                        sound.clip = hitSound;
+                        viewManager.SetScoreText(score, maxScore);
+                        scoreSpritePrefab.SetActive(true);
+                        scoreAnimator.SetBool("Score", true);
+                        break;
+                }
+
+                sound.Play();
+            }
+
+            return score;
         }
 
-        public bool Removed
+        public ViewManager ViewManager
         {
             get
             {
-                return removed;
+                return this.viewManager;
             }
 
             set
             {
-                removed = value;
-            }
-        }
-
-        public bool NotHit
-        {
-            get
-            {
-                return notHit;
-            }
-        }
-
-        public double StartTime
-        {
-            get
-            {
-                return startTime;
-            }
-
-            set
-            {
-                startTime = value;
-            }
-        }
-
-        public double EndTime
-        {
-            get
-            {
-                return endTime;
-            }
-
-            set
-            {
-                endTime = value;
+                this.viewManager = value;
             }
         }
 
@@ -180,7 +139,15 @@
         {
             get
             {
-                return this.isLeft;
+                return isLeft;
+            }
+        }
+
+        public SpriteCollider Collider
+        {
+            get
+            {
+                return spriteCollider;
             }
         }
     }

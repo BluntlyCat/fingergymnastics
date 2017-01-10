@@ -2,6 +2,7 @@
 {
     using Mhaze.Unity.DB.Models;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class Track : Model
     {
@@ -47,6 +48,21 @@
             set
             {
                 this.gestures = value;
+            }
+        }
+
+        public double Length
+        {
+            get
+            {
+                double length = 0f;
+
+                foreach (var gesture in Gestures.Values.OrderBy(g => g.StartTime))
+                {
+                    length += gesture.Duration.TimeOfDay.TotalSeconds;
+                }
+
+                return length;
             }
         }
     }

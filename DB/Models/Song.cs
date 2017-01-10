@@ -10,7 +10,7 @@
         private AudioClip file;
         private Dictionary<long, Track> tracks;
 
-        public Song(string unityObjectName) : base(unityObjectName) {}
+        public Song(string unityObjectName) : base(unityObjectName) { }
 
         [TableColumn]
         public string Title
@@ -61,6 +61,11 @@
             {
                 this.tracks = value;
             }
+        }
+
+        public double GetLength(long trackId)
+        {
+            return Tracks[trackId].Length;
         }
     }
 }

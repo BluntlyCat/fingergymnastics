@@ -12,6 +12,8 @@
     {
         private static string selectedExercise;
         private static bool exerciseIsActive;
+        private static int score;
+        private static int maxScore;
 
 #if UNITY_EDITOR
         private static bool debug = true;
@@ -44,6 +46,32 @@
             set
             {
                 exerciseIsActive = value;
+            }
+        }
+
+        public static int Score
+        {
+            get
+            {
+                return score;
+            }
+
+            set
+            {
+                score = value;
+            }
+        }
+
+        public static int MaxScore
+        {
+            get
+            {
+                return maxScore;
+            }
+
+            set
+            {
+                maxScore = value;
             }
         }
 
