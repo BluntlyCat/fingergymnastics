@@ -15,23 +15,5 @@
         {
             return hand.GrabStrength < 0.1;
         }
-
-        private void Marker_OnMarkerCollision(Marker marker, Hand hand)
-        {
-            if (IsGesture(hand) && this.state == GestureStates.Ready)
-            {
-                this.state = GestureStates.Hit;
-                marker.Collider.CanCollide = false;
-                gestureController.ExpireMarker(this);
-            }
-            else
-                marker.Collider.CanCollide = true;
-        }
-
-        public override void AddMarker(Marker marker)
-        {
-            base.AddMarker(marker);
-            marker.Collider.OnMarkerCollision += Marker_OnMarkerCollision;
-        }
     }
 }

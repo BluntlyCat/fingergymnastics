@@ -1,6 +1,5 @@
 ﻿namespace HSA.FingerGymnastics.Exercises
 {
-    using Controller;
     using Game;
     using System;
     using System.Collections.Generic;
@@ -18,7 +17,6 @@
         {
             this.gestures = new List<Gesture>();
             this.removedGestures = new List<Gesture>();
-
             this.viewManager = viewManager;
         }
 
@@ -59,7 +57,7 @@
                             break;
 
                         case GestureStates.Add:
-                            Marker marker = viewManager.AddMarker(gesture);
+                            Marker marker = viewManager.AddMarker(gesture, time);
                             gesture.AddMarker(marker);
                             gesture.SetState(GestureStates.PreReady);
                             break;
@@ -69,13 +67,8 @@
                             break;
 
                         case GestureStates.Ready:
-                            gesture.SetReady();
+                            gesture.SetActive();
                             gesture.Proof(time);
-                            break;
-
-                        case GestureStates.Expired:
-                            gesture.SetState(GestureStates.NotHit);
-                            ExpireMarker(gesture);
                             break;
                     }
                 }

@@ -103,7 +103,7 @@
 
         public override string ToString()
         {
-            return string.Format("{0}: {1}s, {2}s - {3}s", id, duration.TimeOfDay.TotalSeconds, startTime.TimeOfDay.TotalSeconds, endTime.TimeOfDay.TotalSeconds);
+            return string.Format("{0}: {1}ms", id, startTime.TimeOfDay.TotalMilliseconds);
         }
     }
 }

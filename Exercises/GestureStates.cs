@@ -6,9 +6,10 @@
         PreReady = 1,
         Add = 2,
         Ready = 3,
-        Expired = 4,
-        Hit = 5,
-        NotHit = 6,
-        Removed = 7,
+        Active = 4,
+        Expired = 5,
+        Hit = 6,
+        NotHit = 7,
+        Removed = 8,
     }
 }

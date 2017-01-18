@@ -9,7 +9,7 @@
     using View;
     using DB = DB.Models;
 
-    public class ExerciseController : MonoBehaviour
+    public class ExerciseController : MonoBehaviour, IExerciseController
     {
         public GameObject gameManagerPrefab;
         public GameObject musicPrefab;
@@ -28,7 +28,6 @@
         private GestureController gestureController;
 
         private DB.Song song;
-        private bool hasGestures = true;
 
         private void InitializeGestures()
         {
@@ -62,12 +61,7 @@
             {
                 if (controller.IsConnected && (controller.HasOneHand || GameState.Debug))
                 {
-                    if (music.isPlaying)
-                    {
-                        viewManager.UpdateIndicator(SongLength, CurrentTime);
-                        gestureController.Proof(CurrentTime);
-                    }
-                    else
+                    if(music.isPlaying == false)
                     {
                         StartExercise();
                     }
@@ -80,6 +74,15 @@
             else
             {
                 StopErercise(true);
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (music.isPlaying)
+            {
+                viewManager.UpdateIndicator(SongLength, CurrentTime);
+                gestureController.Proof(CurrentTime);
             }
         }
 

@@ -1,8 +1,8 @@
 ﻿namespace HSA.FingerGymnastics.View
 {
+    using Calc;
     using Exercises;
     using Mhaze.Unity.Logging;
-    using System;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -16,14 +16,14 @@
         public GameObject indicatorPrefab;
         public GameObject markerPrefab;
 
-        public float indicatorVelocity = .1f;
+        public float indicatorVelocityMS = 10000;
+
         public float minIndicatorPosition = -4f;
         public float maxIndicatorPosition = 4f;
 
         public int markerSwapRange = 4;
 
-        private float indicatorPosition;
-
+        private Indicator indicator;
         private Image progressBarImage;
         private Text timeText;
         private Text scoreObject;
@@ -34,53 +34,26 @@
         {
             logger.AddLogAppender<ConsoleAppender>();
 
+            this.indicator = indicatorPrefab.GetComponent<Indicator>();
             this.progressBarImage = progressBarPrefab.GetComponent<Image>();
             this.timeText = progressBarPrefab.GetComponentInChildren<Text>();
             this.scoreObject = scorePrefab.GetComponent<Text>();
-
-            indicatorPosition = minIndicatorPosition + new System.Random(DateTime.Now.TimeOfDay.Milliseconds).Next((int)(maxIndicatorPosition - minIndicatorPosition));
-
-            SetIndicatorXPosition(indicatorPosition);
         }
 
-        public Marker AddMarker(Gesture gesture)
+        public Marker AddMarker(Gesture gesture, float currentTime)
         {
             var markerModel = GameObject.Instantiate(markerPrefab, gesturePlanePrefab.transform, false);
             var marker = markerModel.GetComponentInChildren<Marker>();
 
-            bool left = indicatorPosition <= 0;
-
-            if (indicatorVelocity > 0 && indicatorPosition == 0)
-                left = false;
-
-            markerModel.SetActive(true);
-            markerModel.name = gesture.GestureModel.ToString();
-            markerModel.transform.localPosition = new Vector3(indicatorPrefab.transform.position.x, 1f, -1 + markerCount % markerSwapRange);
-
-            marker.ViewManager = this;
-            marker.SetOrientation(left);
-            marker.SetMarkerPreReady();
-            marker.SetGestureSprite(gesture.GestureModel.GestureType);
+            marker.Init(gesture, maxIndicatorPosition, minIndicatorPosition, indicatorVelocityMS, markerCount, markerSwapRange, this, indicator.IsLeft);
 
             markerCount++;
 
             return marker;
         }
-
-        private void SetIndicatorXPosition(float x)
-        {
-            indicatorPrefab.transform.localPosition = new Vector3(x, indicatorPrefab.transform.localPosition.y, indicatorPrefab.transform.localPosition.z);
-        }
-
+        
         public void UpdateIndicator(float songLength, float currentTime)
         {
-            if (indicatorPosition > maxIndicatorPosition)
-                indicatorVelocity *= -1;
-            else if (indicatorPosition < minIndicatorPosition)
-                indicatorVelocity *= -1;
-
-            SetIndicatorXPosition(indicatorPosition += indicatorVelocity);
-
             this.progressBarImage.fillAmount = (1 / songLength) * currentTime;
             this.timeText.text = string.Format("{0}s", currentTime.ToString("0.00"));
         }

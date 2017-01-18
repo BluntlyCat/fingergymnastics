@@ -56,23 +56,41 @@
                     if (time >= gestureModel.StartTime.TimeOfDay.TotalSeconds && time <= gestureModel.EndTime.TimeOfDay.TotalSeconds)
                         this.state = GestureStates.Ready;
                     break;
-
-                case GestureStates.Ready:
-                    if (time > gestureModel.EndTime.TimeOfDay.TotalSeconds)
-                        this.state = GestureStates.Expired;
-                    break;
             }
+        }
+
+        private void CountDown_OnTimeOut(Gesture gesture)
+        {
+            this.state = GestureStates.NotHit;
+            marker.Collider.CanCollide = false;
+            gestureController.ExpireMarker(gesture);
         }
 
         public virtual void AddMarker(Marker marker)
         {
             this.state = GestureStates.PreReady;
             this.marker = marker;
+
+            marker.CountDown.OnTimeOut += CountDown_OnTimeOut;
         }
         
-        public void SetReady()
+        public void SetActive()
         {
-            this.Marker.SetMarkerReady();
+            this.state = GestureStates.Active;
+            this.Marker.SetMarkerActive(gestureModel.Duration, this, state);
+            marker.Collider.OnMarkerCollision += Marker_OnMarkerCollision;
+        }
+
+        private void Marker_OnMarkerCollision(Marker marker, Gesture gesture, Hand hand)
+        {
+            if (gesture.IsGesture(hand) && this.state == GestureStates.Active)
+            {
+                this.state = GestureStates.Hit;
+                marker.Collider.CanCollide = false;
+                gestureController.ExpireMarker(gesture);
+            }
+            else
+                marker.Collider.CanCollide = true;
         }
         
         public void SetState(GestureStates state)
@@ -85,6 +103,14 @@
             get
             {
                 return this.state;
+            }
+        }
+
+        public float StartPosition
+        {
+            get
+            {
+                return (float)gestureModel.StartTime.TimeOfDay.TotalMilliseconds;
             }
         }
 
