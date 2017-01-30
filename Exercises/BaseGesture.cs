@@ -5,12 +5,8 @@
     using View;
     using DB = DB.Models;
 
-    public abstract class Gesture
+    public abstract class BaseGesture : DB.Gesture
     {
-        protected static Logger<Gesture> logger = new Logger<Gesture>();
-
-        protected DB.Gesture gestureModel;
-
         protected Marker marker;
         protected GestureController gestureController;
 
@@ -18,23 +14,14 @@
 
         private double timeOffset;
         
-        public Gesture(DB.Gesture gesture, GestureController gestureController, double timeOffset)
+        public BaseGesture(GestureController gestureController, double timeOffset, DB.Gesture gesture) : base (gesture)
         {
             logger.AddLogAppender<ConsoleAppender>();
 
-            this.gestureModel = gesture;
             this.gestureController = gestureController;
             this.timeOffset = timeOffset;
         }
         
-        public DB.Gesture GestureModel
-        {
-            get
-            {
-                return gestureModel;
-            }
-        }
-
         public Marker Marker
         {
             get
@@ -48,18 +35,18 @@
             switch(state)
             {
                 case GestureStates.NotAdded:
-                    if (time >= gestureModel.StartTime.TimeOfDay.TotalSeconds - timeOffset && time < gestureModel.StartTime.TimeOfDay.TotalSeconds)
+                    if (time >= this.StartTime.TimeOfDay.TotalSeconds - timeOffset && time < this.StartTime.TimeOfDay.TotalSeconds)
                         this.state = GestureStates.Add;
                     break;
 
                 case GestureStates.PreReady:
-                    if (time >= gestureModel.StartTime.TimeOfDay.TotalSeconds && time <= gestureModel.EndTime.TimeOfDay.TotalSeconds)
+                    if (time >= this.StartTime.TimeOfDay.TotalSeconds && time <= this.EndTime.TimeOfDay.TotalSeconds)
                         this.state = GestureStates.Ready;
                     break;
             }
         }
 
-        private void CountDown_OnTimeOut(Gesture gesture)
+        private void CountDown_OnTimeOut(BaseGesture gesture)
         {
             this.state = GestureStates.NotHit;
             marker.Collider.CanCollide = false;
@@ -77,11 +64,11 @@
         public void SetActive()
         {
             this.state = GestureStates.Active;
-            this.Marker.SetMarkerActive(gestureModel.Duration, this, state);
+            this.Marker.SetMarkerActive(this.Duration, this, state);
             marker.Collider.OnMarkerCollision += Marker_OnMarkerCollision;
         }
 
-        private void Marker_OnMarkerCollision(Marker marker, Gesture gesture, Hand hand)
+        private void Marker_OnMarkerCollision(Marker marker, BaseGesture gesture, Hand hand)
         {
             if (gesture.IsGesture(hand) && this.state == GestureStates.Active)
             {
@@ -110,7 +97,7 @@
         {
             get
             {
-                return (float)gestureModel.StartTime.TimeOfDay.TotalMilliseconds;
+                return (float)this.StartTime.TimeOfDay.TotalMilliseconds;
             }
         }
 

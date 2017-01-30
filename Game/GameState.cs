@@ -10,29 +10,29 @@
     [RequireComponent(typeof(SceneManager))]
     public class GameState : MonoBehaviour
     {
-        private static string selectedExercise;
+        private static Song selectedSong;
         private static bool exerciseIsActive;
         private static int score;
         private static int maxScore;
-
+        
 #if UNITY_EDITOR
         private static bool debug = true;
 #else
         private static bool debug = false;
 #endif
-        public static string SelectedExercise
+        public static Song SelectedSong
         {
             get
             {
-                if (selectedExercise == null)
-                    return Model.All<Song>().First().Value.UnityObjectName;
+                if (selectedSong == null)
+                    return Model.All<Song>().First().Value;
 
-                return selectedExercise;
+                return selectedSong;
             }
 
             set
             {
-                selectedExercise = value;
+                selectedSong = value;
             }
         }
 

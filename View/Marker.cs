@@ -21,6 +21,9 @@
         public GameObject handSpritePrefab;
         public GameObject countDownPrefab;
 
+        public float alphaPreready = .5f;
+        public float alphaActive = 1f;
+
         private ViewManager viewManager;
         private CountDown countDown;
 
@@ -54,21 +57,25 @@
             countDown = countDownPrefab.GetComponent<CountDown>();
         }
 
-        public void Init(Gesture gesture, float maxX, float minX, float velocity, int count, int swapRange, ViewManager viewManager, bool left)
+        public void Init(BaseGesture gesture, float maxX, float minX, float velocity, int count, int markerTopPosition, int swapRange, ViewManager viewManager)
         {
+            float position = 0f;
+            float offset = 0f;
+
+            this.viewManager = viewManager;
             calc = new Calc(maxX, minX, velocity);
 
             gameObject.SetActive(true);
-            gameObject.name = gesture.GestureModel.ToString();
+            gameObject.name = gesture.ToString();
 
-            this.viewManager = viewManager;
-            this.SetOrientation(left);
+            offset = this.GetOffset();
+            position = calc.GetXByTime(gesture.StartPosition + offset);
+
+            this.SetOrientation(calc.IsLeft);
             this.SetMarkerPreReady(GestureStates.PreReady);
-            this.SetGestureSprite(gesture.GestureModel.GestureType);
+            this.SetGestureSprite(gesture.GestureType);
 
-            var offset = this.GetOffset();
-
-            gameObject.transform.localPosition = new Vector3(calc.GetXByTime(gesture.StartPosition + offset), -1 + count % swapRange, 0);
+            gameObject.transform.localPosition = new Vector3(position, markerTopPosition + count % swapRange, 0);
         }
 
         private float GetOffset()
@@ -132,13 +139,13 @@
         public void SetMarkerPreReady(GestureStates state)
         {
             SetColor(handSpriteRenderer, state);
-            SetAlpha(handSpriteRenderer, .25f);
+            SetAlpha(handSpriteRenderer, alphaPreready);
         }
 
-        public void SetMarkerActive(DateTime time, Gesture gesture, GestureStates state)
+        public void SetMarkerActive(DateTime time, BaseGesture gesture, GestureStates state)
         {
             SetColor(handSpriteRenderer, state);
-            SetAlpha(handSpriteRenderer, 1f);
+            SetAlpha(handSpriteRenderer, alphaActive);
             spriteCollider.SetGesture(gesture);
             handSpritePrefab.GetComponent<BoxCollider>().enabled = true;
             countDown.SetCountDown(time, gesture);

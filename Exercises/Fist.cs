@@ -4,9 +4,9 @@
     using View;
     using DB = DB.Models;
 
-    public class Fist : Gesture
+    public class Fist : BaseGesture
     {
-        public Fist(DB.Gesture gesture, GestureController gestureController, double timeOffset) : base(gesture, gestureController, timeOffset)
+        public Fist(DB.Gesture gesture, GestureController gestureController, double timeOffset) : base(gestureController, timeOffset, gesture)
         {
         }
 

@@ -8,21 +8,23 @@
 
     public class GestureController
     {
-        private IList<Gesture> gestures;
-        private IList<Gesture> removedGestures;
+        private IList<BaseGesture> gestures;
+        private IList<BaseGesture> removedGestures;
 
         private ViewManager viewManager;
+        private float indicatorVelocityMS;
 
-        public GestureController(ViewManager viewManager)
+        public GestureController(ViewManager viewManager, float indicatorVelocityMS)
         {
-            this.gestures = new List<Gesture>();
-            this.removedGestures = new List<Gesture>();
+            this.gestures = new List<BaseGesture>();
+            this.removedGestures = new List<BaseGesture>();
             this.viewManager = viewManager;
+            this.indicatorVelocityMS = indicatorVelocityMS;
         }
 
         public void AddGesture(DB.Gesture gesture, double timeOffset)
         {
-            Gesture newGesture = null;
+            BaseGesture newGesture = null;
 
             switch (gesture.GestureType)
             {
@@ -38,7 +40,7 @@
             gestures.Add(newGesture);
         }
 
-        public void ExpireMarker(Gesture gesture)
+        public void ExpireMarker(BaseGesture gesture)
         {
             GameState.Score = gesture.Marker.DisableMarker(GameState.Score, GameState.MaxScore, gesture.State);
             removedGestures.Add(gesture);
@@ -48,7 +50,7 @@
         {
             try
             {
-                foreach (Gesture gesture in gestures)
+                foreach (BaseGesture gesture in gestures)
                 {
                     switch (gesture.State)
                     {
@@ -57,7 +59,7 @@
                             break;
 
                         case GestureStates.Add:
-                            Marker marker = viewManager.AddMarker(gesture, time);
+                            Marker marker = viewManager.AddMarker(gesture, indicatorVelocityMS);
                             gesture.AddMarker(marker);
                             gesture.SetState(GestureStates.PreReady);
                             break;

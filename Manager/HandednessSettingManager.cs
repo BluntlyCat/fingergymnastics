@@ -1,5 +1,6 @@
 ﻿namespace HSA.FingerGymnastics.Manager
 {
+    using DB.Models;
     using Mhaze.Unity.DB.Models;
     using UnityEngine;
 
@@ -8,7 +9,6 @@
         private static UnityKeyValue rightHanded;
 
         private static SceneManager sceneManager;
-        private static bool initialized;
 
         void Awake()
         {
@@ -26,9 +26,10 @@
             }
         }
 
-        public void SwitchHandedness()
+        public void SwitchHandedness(GameObject button)
         {
             rightHanded.SetValue(!rightHanded.GetValue<bool>());
+            LastSelected.SetLastItem(button.name);
             sceneManager.ReloadScene();
         }
     }

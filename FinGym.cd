@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HSA.FingerGymnastics.Controller.ExerciseController" Collapsed="true">
+    <Position X="8" Y="4.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AARBAIAAAkABAgkYgAQAAAAAAICIAAAAAAAghAgAAUI=</HashCode>
+      <FileName>Assets\Scripts\Controller\ExerciseController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HSA.FingerGymnastics.Controller.LeapHandController" Collapsed="true">
+    <Position X="6" Y="4.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIQAAAAEgAQAAFCAIIAAASAAAAAAAAIAAAAABAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Controller\LeapHandController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.Controller.HandViewController" Collapsed="true">
+    <Position X="5.75" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACQEIAQAgiAACCACAAAAAAAAAAAAAAAgAAAGAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\Controller\HandViewController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.View.ViewManager" Collapsed="true">
+    <Position X="8" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQBAAAABAACAAAACAAAAAAQgAIgAgmAAAAQAUE=</HashCode>
+      <FileName>Assets\Scripts\View\ViewManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.View.Marker" Collapsed="true">
+    <Position X="18.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIECAgaAJhgCBAAYABIABAEEAA0QBCgOIQAgAEA=</HashCode>
+      <FileName>Assets\Scripts\View\Marker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.View.CountDown" Collapsed="true">
+    <Position X="20.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAACAACAAAAACAAAQgAAAUQAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\View\CountDown.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.View.SpriteCollider" Collapsed="true">
+    <Position X="20.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAACAABAAAAAQAAAAAEYAACAAAQAAAA=</HashCode>
+      <FileName>Assets\Scripts\View\SpriteCollider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.Exercises.GestureController" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAkAAAgIAAIAAIAAAAACAAAACAAAAAAAAAAQ=</HashCode>
+      <FileName>Assets\Scripts\Exercises\GestureController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.Exercises.Fist" Collapsed="true">
+    <Position X="15.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Exercises\Fist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.Exercises.ExtendedHand" Collapsed="true">
+    <Position X="15.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Exercises\ExtendedHand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.DB.Models.Song" Collapsed="true">
+    <Position X="15.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQEAAAEBABAAAAAAAAAAEAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\DB\Models\Song.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.DB.Models.Track" Collapsed="true">
+    <Position X="15.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAIAAAACAABAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\DB\Models\Track.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSA.FingerGymnastics.DB.Models.Gesture" Collapsed="true">
+    <Position X="15.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAACgAAEAACgACBAoAAgAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\DB\Models\Gesture.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="HSA.FingerGymnastics.Exercises.Gestures" Collapsed="true">
+    <Position X="15.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Exercises\Gestures.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="HSA.FingerGymnastics.View.CountDownEventHandler" Collapsed="true">
+    <Position X="20.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\View\CountDown.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="HSA.FingerGymnastics.View.CollisionEventHandler" Collapsed="true">
+    <Position X="20.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAEAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\View\SpriteCollider.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

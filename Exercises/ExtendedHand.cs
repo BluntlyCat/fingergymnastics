@@ -4,9 +4,9 @@
     using View;
     using DB = DB.Models;
 
-    public class ExtendedHand : Gesture
+    public class ExtendedHand : BaseGesture
     {
-        public ExtendedHand(DB.Gesture gesture, GestureController gestureController, double timeOffset) : base (gesture, gestureController, timeOffset)
+        public ExtendedHand(DB.Gesture gesture, GestureController gestureController, double timeOffset) : base (gestureController, timeOffset, gesture)
         {
             
         }

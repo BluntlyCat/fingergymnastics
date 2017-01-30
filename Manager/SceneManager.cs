@@ -1,5 +1,6 @@
 ﻿namespace HSA.FingerGymnastics.Manager
 {
+    using DB.Models;
     using Mhaze.Unity.Logging;
     using UnityEngine;
     using USM = UnityEngine.SceneManagement;
@@ -19,6 +20,14 @@
             logger.Debug(string.Format("Load scene: {0}", sceneName));
         }
 
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                this.LoadScene("MainMenu");
+            }
+        }
+
         public static string SceneName
         {
             get
@@ -34,6 +43,7 @@
 
         public void LoadExercise()
         {
+            LastSelected.SetLastItem("");
             this.LoadNewScene("Exercise");
         }
 
@@ -44,11 +54,13 @@
 
         public void Quit()
         {
+            LastSelected.SetLastItem("");
             Application.Quit();
         }
 
         public void LoadScene(string sceneName)
         {
+            LastSelected.SetLastItem("");
             this.LoadNewScene(sceneName);
         }
 

@@ -18,6 +18,8 @@
 
         public double timeOffset = 1d;
 
+        private float indicatorVelocityMS;
+
         private AudioSource music;
 
         private SceneManager sceneManager;
@@ -37,17 +39,19 @@
             }
         }
 
-        private void Start()
+        private void Awake()
         {
             gameState = gameManagerPrefab.GetComponent<GameState>();
             controller = handControllerPrefab.GetComponent<LeapHandController>();
             viewManager = viewManagerPrefab.GetComponent<ViewManager>();
             music = musicPrefab.GetComponent<AudioSource>();
             sceneManager = GetComponentInParent<SceneManager>();
+            indicatorVelocityMS = (float)GetComponentInParent<DifficultySettingsManager>().ActiveDifficulty;
 
-            song = Model.GetModel<DB.Song>(GameState.SelectedExercise);
+            song = GameState.SelectedSong;
             GameState.MaxScore = song.Tracks.First().Value.Gestures.Count;
-            gestureController = new GestureController(viewManager);
+            GameState.Score = 0;
+            gestureController = new GestureController(viewManager, indicatorVelocityMS);
             
             music.clip = song.File;
             viewManager.SetScoreText(0, song.Tracks.First().Value.Gestures.Count);
@@ -57,23 +61,21 @@
 
         private void Update()
         {
-            if (gestureController.RemovedGestureCount != gestureController.GestureCount)
+            if (controller.IsConnected == false || !(controller.HasOneHand || GameState.Debug))
             {
-                if (controller.IsConnected && (controller.HasOneHand || GameState.Debug))
-                {
-                    if(music.isPlaying == false)
-                    {
-                        StartExercise();
-                    }
-                }
-                else
-                {
-                    PauseExercise();
-                }
+                PauseExercise();
             }
             else
             {
-                StopErercise(true);
+                if (gestureController.RemovedGestureCount == gestureController.GestureCount && music.isPlaying == false)
+                {
+                    StopErercise(FinishStates.Finished);
+                }
+
+                else if (gestureController.RemovedGestureCount != gestureController.GestureCount && music.isPlaying == false)
+                {
+                    StartExercise();
+                }
             }
         }
 
@@ -96,12 +98,23 @@
             music.Pause();
         }
 
-        public void StopErercise(bool finished)
+        public void StopErercise(FinishStates state)
         {
             music.Stop();
 
-            if (finished)
-                sceneManager.LoadScene("Finished");
+            switch(state)
+            {
+                case FinishStates.None:
+                    break;
+
+                case FinishStates.Canceled:
+                    sceneManager.LoadScene("MainMenu");
+                    break;
+
+                case FinishStates.Finished:
+                    sceneManager.LoadScene("Finished");
+                    break;
+            }
         }
 
         public float CurrentTime
@@ -109,6 +122,14 @@
             get
             {
                 return music.time;
+            }
+        }
+
+        public float IndicatorVelocityMs
+        {
+            get
+            {
+                return indicatorVelocityMS;
             }
         }
 

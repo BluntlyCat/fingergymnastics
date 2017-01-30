@@ -1,12 +1,8 @@
 ﻿namespace HSA.FingerGymnastics.View
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using UnityEngine;
     using Calc;
     using Controller;
+    using UnityEngine;
 
     public class Indicator : MonoBehaviour
     {
@@ -23,7 +19,7 @@
             exerciseController = exerciseControllerPrefab.GetComponent<ExerciseController>();
             viewManager = viewManagerPrefab.GetComponent<ViewManager>();
 
-            calc = new Calc(viewManager.maxIndicatorPosition, viewManager.minIndicatorPosition, viewManager.indicatorVelocityMS);
+            calc = new Calc(viewManager.maxIndicatorPosition, viewManager.minIndicatorPosition, exerciseController.IndicatorVelocityMs);
 
             SetIndicatorXPosition(calc.X);
         }

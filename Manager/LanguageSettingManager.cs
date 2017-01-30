@@ -2,7 +2,6 @@
 {
     using DB.Models;
     using Mhaze.Unity.DB.Models;
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -14,7 +13,6 @@
 
         private static SceneManager sceneManager;
         private static IList languages;
-        private static bool initialized;
 
         void Awake()
         {
@@ -35,7 +33,7 @@
             }
         }
 
-        public void SwitchLanguage()
+        public void SwitchLanguage(GameObject button)
         {
             int index = 0;
             
@@ -49,7 +47,7 @@
 
             var newLanguage = languages[index % languages.Count].ToString();
             activeLanguange.SetValue<string>(newLanguage);
-            
+            LastSelected.SetLastItem(button.name);
             sceneManager.ReloadScene();
         }
 

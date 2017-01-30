@@ -5,7 +5,7 @@
     using Mhaze.Unity.Logging;
     using UnityEngine;
 
-    public delegate void CollisionEventHandler(Marker marker, Gesture gesture, LM.Hand hand);
+    public delegate void CollisionEventHandler(Marker marker, BaseGesture gesture, LM.Hand hand);
 
     public class SpriteCollider : MonoBehaviour
     {
@@ -13,7 +13,7 @@
 
         public event CollisionEventHandler OnMarkerCollision;
 
-        private Gesture gesture;
+        private BaseGesture gesture;
         private bool canCollide = true;
 
         private void Start()
@@ -56,7 +56,7 @@
             return null;
         }
 
-        public void SetGesture(Gesture gesture)
+        public void SetGesture(BaseGesture gesture)
         {
             this.gesture = gesture;
         }

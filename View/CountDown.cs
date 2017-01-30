@@ -6,7 +6,7 @@
     using UnityEngine;
     using UnityEngine.UI;
 
-    public delegate void CountDownEventHandler(Gesture gesture);
+    public delegate void CountDownEventHandler(BaseGesture gesture);
 
     public class CountDown : MonoBehaviour
     {
@@ -16,7 +16,7 @@
 
         private Image countDownImage;
         private DateTime endTime;
-        private Gesture gesture;
+        private BaseGesture gesture;
         private bool timeSet;
 
         private float totalMilliseconds;
@@ -27,7 +27,7 @@
             countDownImage = GetComponent<Image>();
         }
 
-        public void SetCountDown(DateTime time, Gesture gesture)
+        public void SetCountDown(DateTime time, BaseGesture gesture)
         {
             endTime = time.Add(DateTime.Now.TimeOfDay);
             totalMilliseconds = (float)time.TimeOfDay.TotalMilliseconds;

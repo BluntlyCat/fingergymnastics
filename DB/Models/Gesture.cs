@@ -18,6 +18,15 @@
             this.id = id;
         }
 
+        public Gesture(Gesture gesture)
+        {
+            this.id = gesture.ID;
+            this.startTime = gesture.StartTime;
+            this.endTime = gesture.EndTime;
+            this.duration = gesture.Duration;
+            this.gestureType = gesture.LongGestureType;
+        }
+
         [PrimaryKey]
         public long ID
         {

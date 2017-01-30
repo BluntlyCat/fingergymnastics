@@ -1,6 +1,5 @@
 ﻿namespace HSA.FingerGymnastics.View
 {
-    using Calc;
     using Exercises;
     using Mhaze.Unity.Logging;
     using UnityEngine;
@@ -13,39 +12,35 @@
         public GameObject gesturePlanePrefab;
         public GameObject progressBarPrefab;
         public GameObject scorePrefab;
-        public GameObject indicatorPrefab;
         public GameObject markerPrefab;
-
-        public float indicatorVelocityMS = 10000;
 
         public float minIndicatorPosition = -4f;
         public float maxIndicatorPosition = 4f;
 
+        public int markerTopPosition = -1;
         public int markerSwapRange = 4;
 
-        private Indicator indicator;
         private Image progressBarImage;
         private Text timeText;
         private Text scoreObject;
 
         private int markerCount = 0;
 
-        void Start()
+        void Awake()
         {
             logger.AddLogAppender<ConsoleAppender>();
 
-            this.indicator = indicatorPrefab.GetComponent<Indicator>();
             this.progressBarImage = progressBarPrefab.GetComponent<Image>();
             this.timeText = progressBarPrefab.GetComponentInChildren<Text>();
             this.scoreObject = scorePrefab.GetComponent<Text>();
         }
 
-        public Marker AddMarker(Gesture gesture, float currentTime)
+        public Marker AddMarker(BaseGesture gesture, float indicatorVelocityMS)
         {
             var markerModel = GameObject.Instantiate(markerPrefab, gesturePlanePrefab.transform, false);
             var marker = markerModel.GetComponentInChildren<Marker>();
 
-            marker.Init(gesture, maxIndicatorPosition, minIndicatorPosition, indicatorVelocityMS, markerCount, markerSwapRange, this, indicator.IsLeft);
+            marker.Init(gesture, maxIndicatorPosition, minIndicatorPosition, indicatorVelocityMS, markerCount, markerTopPosition, markerSwapRange, this);
 
             markerCount++;
 

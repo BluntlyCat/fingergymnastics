@@ -2,7 +2,10 @@
 {
     using FingerGymnastics.Controller;
     using Game;
+    using Manager;
+    using Mhaze.Unity.DB.Models;
     using UnityEngine;
+    using UnityEngine.UI;
 
     public class NoHandsNotice : MonoBehaviour
     {
@@ -22,6 +25,7 @@
 
         public GameObject handControllerPrefab;
 
+        private GUITexture guiTexture;
         private float fadedIn = 0.0f;
         private int frames_disconnected_ = 0;
         private LeapHandController controller;
@@ -30,6 +34,11 @@
         {
             SetAlpha(0.0f);
             controller = handControllerPrefab.GetComponent<LeapHandController>();
+            guiTexture = GetComponent<GUITexture>();
+
+            var notice = Model.GetModel<UnityMedia<Texture>>("noHandNotice", LanguageSettingManager.GetActiveLanguage());
+
+            guiTexture.texture = notice.Media;
         }
 
         void SetAlpha(float alpha)

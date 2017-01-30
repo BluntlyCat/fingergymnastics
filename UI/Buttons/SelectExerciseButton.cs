@@ -1,25 +1,25 @@
 ﻿namespace HSA.FingerGymnastics.UI.Buttons
 {
+    using DB.Models;
     using Game;
     using Manager;
+    using Mhaze.Unity.DB.Models;
     using UnityEngine;
 
     public class SelectExerciseButton : MonoBehaviour
     {
         public GameObject gameManagerPrefab;
 
-        private GameState gameState;
         private SceneManager sceneManager;
 
         void Start()
         {
-            this.gameState = gameManagerPrefab.GetComponent<GameState>();
             this.sceneManager = gameManagerPrefab.GetComponent<SceneManager>();
         }
 
         public void LoadExercise()
         {
-            GameState.SelectedExercise = this.name;
+            GameState.SelectedSong = Model.GetModel<Song>(this.name);
             sceneManager.LoadExercise();
         }
     }
